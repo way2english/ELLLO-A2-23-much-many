@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A2-23 Much / Many | Way2English</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#4361ee;--violet:#7c3aed;--teal:#0d9488;
+  --green:#16a34a;--red:#dc2626;
+  --bg:#f8fafc;--card:#fff;--text:#1e293b;
+  --muted:#64748b;--border:#e2e8f0;
+  --shadow:0 4px 24px rgba(67,97,238,.10);--radius:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+.hero{background:linear-gradient(135deg,#1e3a8a 0%,#4361ee 55%,#7c3aed 100%);padding:32px 24px 28px;text-align:center;color:#fff}
+.hero h1{font-size:clamp(20px,4vw,28px);font-weight:800;margin-bottom:6px}
+.hero p{font-size:14px;opacity:.85}
+.badge{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);border-radius:20px;font-size:12px;font-weight:700;padding:3px 12px;margin-bottom:12px;letter-spacing:.5px}
+
+.stepper{display:flex;overflow-x:auto;background:#fff;border-bottom:1px solid var(--border);scrollbar-width:none}
+.stepper::-webkit-scrollbar{display:none}
+.step-btn{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 14px;border:none;background:none;cursor:pointer;font-family:inherit;font-size:11px;color:var(--muted);font-weight:600;border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap}
+.step-btn .sicon{font-size:18px}
+.step-btn:hover{color:var(--blue)}
+.step-btn.active{color:var(--blue);border-bottom-color:var(--blue)}
+.step-btn.done{color:var(--green)}
+
+.step-panel{display:none;padding:24px 16px;max-width:760px;margin:0 auto}
+.step-panel.active{display:block;animation:fadeUp .35s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
+.card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);padding:22px;margin-bottom:18px}
+.card-title{font-size:16px;font-weight:800;margin-bottom:14px}
+.section-label{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px}
+
+.vimeo-wrap{position:relative;padding-bottom:56.25%;height:0;border-radius:12px;overflow:hidden;margin-bottom:18px}
+.vimeo-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
+.conv-list{list-style:none;display:grid;gap:8px}
+.conv-list li{background:#f1f5f9;border-radius:10px;padding:10px 14px;font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px}
+.conv-list li .num{background:var(--blue);color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
+
+.vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.vocab-item{background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.vocab-word{font-weight:700;font-size:14px;flex:1}
+.vocab-ua{font-size:12px;color:var(--muted);margin-top:3px;font-weight:400}
+.speak-btn{background:none;border:none;cursor:pointer;font-size:18px;padding:2px}
+
+.conv-img{width:100%;border-radius:12px;margin-bottom:14px;max-height:220px;object-fit:cover}
+.quiz-q{margin-bottom:14px}
+.quiz-q p{font-size:14px;font-weight:700;margin-bottom:8px}
+.quiz-opts{display:flex;flex-direction:column;gap:6px}
+.quiz-opt{text-align:left;background:#f1f5f9;border:2px solid var(--border);border-radius:10px;padding:9px 14px;font-size:13px;font-family:inherit;cursor:pointer;transition:all .15s;font-weight:600}
+.quiz-opt:hover:not(:disabled){background:#e0e7ff;border-color:var(--blue)}
+.quiz-opt.correct{background:#dcfce7;border-color:var(--green);color:var(--green)}
+.quiz-opt.wrong{background:#fee2e2;border-color:var(--red);color:var(--red)}
+.quiz-result{margin-top:10px;padding:10px 14px;border-radius:10px;font-weight:700;font-size:14px;text-align:center}
+.quiz-result.pass{background:#dcfce7;color:var(--green)}
+.quiz-result.fail{background:#fef9c3;color:#92400e}
+
+.pzl-line{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-bottom:8px;font-size:14px;line-height:1.9}
+.pzl-word{font-weight:600}
+.pzl-sel{border:2px solid var(--blue);border-radius:8px;padding:3px 6px;font-family:inherit;font-size:13px;font-weight:600;background:#eff6ff;color:var(--blue);cursor:pointer;max-width:160px}
+.pzl-sel.ok{border-color:var(--green);background:#dcfce7;color:var(--green)}
+.pzl-sel.err{border-color:var(--red);background:#fee2e2;color:var(--red)}
+.pzl-audio-label{font-size:12px;color:var(--muted);margin:14px 0 4px;font-style:italic}
+.pzl-score{margin-top:8px;font-weight:700;font-size:14px}
+.check-btn{background:var(--blue);color:#fff;border:none;border-radius:10px;padding:10px 22px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;margin-top:12px;transition:opacity .2s}
+.check-btn:hover{opacity:.88}
+
+.slide{display:none}.slide.active{display:block}
+.transcript p{font-size:14px;line-height:1.9;margin-bottom:8px}
+.transcript strong{color:var(--blue)}
+.car-nav{display:flex;align-items:center;gap:12px;margin-top:16px;justify-content:center}
+.car-btn{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:8px 18px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .2s}
+.car-btn:disabled{opacity:.35;cursor:default}
+.car-counter{font-size:13px;font-weight:700;color:var(--muted);min-width:50px;text-align:center}
+
+.flip-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.flip-card{height:110px;perspective:600px;cursor:pointer}
+.flip-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.flip-card.flipped .flip-inner{transform:rotateY(180deg)}
+.flip-front,.flip-back{position:absolute;inset:0;border-radius:12px;backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px;text-align:center}
+.flip-front{background:linear-gradient(135deg,#1e3a8a,#4361ee);color:#fff}
+.flip-back{background:#fff;border:2px solid var(--border);transform:rotateY(180deg)}
+.flip-front .fe{font-size:13px;font-weight:700;line-height:1.35}
+.flip-front .fhint{font-size:10px;opacity:.7;margin-top:5px}
+.flip-back .fu{font-size:13px;font-weight:700;color:var(--violet)}
+.flip-all-btn{background:var(--violet);color:#fff;border:none;border-radius:10px;padding:9px 20px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:14px}
+
+.sp-card{background:#f8fafc;border-radius:12px;border:1px solid var(--border);padding:14px 16px;margin-bottom:10px}
+.sp-role{font-size:11px;font-weight:800;color:var(--violet);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.sp-text{font-size:14px;font-weight:600}
+.sp-blank{display:inline-block;width:260px;border-bottom:2px dashed var(--violet);color:var(--muted);font-size:13px;font-style:italic}
+.sp-interview-note{font-size:12px;color:var(--muted);font-style:italic;text-align:center;margin-bottom:14px;background:#f8fafc;padding:8px;border-radius:8px}
+
+.results-fab{position:fixed;bottom:20px;right:20px;background:linear-gradient(135deg,var(--blue),var(--violet));color:#fff;border:none;border-radius:50px;padding:12px 20px;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;box-shadow:0 4px 20px rgba(67,97,238,.4);z-index:100;transition:transform .2s}
+.results-fab:hover{transform:scale(1.04)}
+
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal-box{background:#fff;border-radius:var(--radius);padding:28px;max-width:420px;width:90%;max-height:85vh;overflow-y:auto}
+.modal-box h2{font-size:18px;font-weight:800;margin-bottom:16px}
+.results-table{width:100%;border-collapse:collapse;margin-bottom:14px;font-size:13px}
+.results-table th,.results-table td{border:1px solid var(--border);padding:7px 10px;text-align:left}
+.results-table th{background:#f1f5f9;font-weight:700}
+.results-total{font-size:18px;font-weight:800;text-align:center;margin-bottom:14px;padding:10px;background:#f1f5f9;border-radius:10px}
+.results-area{width:100%;height:130px;font-family:'JetBrains Mono',monospace;font-size:12px;border:1px solid var(--border);border-radius:8px;padding:8px;resize:none}
+.modal-close{margin-top:12px;width:100%;background:var(--blue);color:#fff;border:none;border-radius:10px;padding:10px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">A2 · Урок 23</div>
+  <h1>📊 Much / Many</h1>
+  <p>much + незлічувані · many + злічувані · a lot / a few / a little</p>
+</div>
+
+<div class="stepper" id="stepper"></div>
+
+<div id="panels">
+
+<!-- STEP 0: WATCH -->
+<div class="step-panel" id="panel-0">
+  <div class="card">
+    <div class="card-title">🎬 Дивимось і слухаємо</div>
+    <div class="vimeo-wrap">
+      <iframe src="https://player.vimeo.com/video/578757904" allowfullscreen></iframe>
+    </div>
+    <div class="section-label">4 розмови цього уроку</div>
+    <ul class="conv-list">
+      <li><span class="num">1</span>Town — is it a nice place to live?</li>
+      <li><span class="num">2</span>Food — shopping list at the supermarket</li>
+      <li><span class="num">3</span>Gym — comparing school gyms</li>
+      <li><span class="num">4</span>Movies — invitation to the cinema</li>
+    </ul>
+  </div>
+</div>
+
+<!-- STEP 1: СЛОВА -->
+<div class="step-panel" id="panel-1">
+  <div class="card">
+    <div class="card-title">📚 Слова уроку</div>
+    <div class="vocab-grid" id="vocabGrid"></div>
+  </div>
+</div>
+
+<!-- STEP 2: CONV 1 -->
+<div class="step-panel" id="panel-2">
+  <div class="card">
+    <div class="card-title">🎧 Розмова 1 — Town</div>
+    <img class="conv-img" src="A2-23-1-Much-Many-Town.jpg" alt="Conversation 1">
+    <audio controls style="display:block;width:100%;margin-bottom:20px">
+      <source src="A2-23-1-Much-Many-Town.mp3">
+      <source src="https://elllo.org/Audio/SoundGrammar/A2-Audio4x/A2-23-1-Much-Many-Town.mp3">
+    </audio>
+    <div id="quiz-container-0"></div>
+    <div class="quiz-result" id="qresult-0" style="display:none"></div>
+  </div>
+</div>
+
+<!-- STEP 3: CONV 2 -->
+<div class="step-panel" id="panel-3">
+  <div class="card">
+    <div class="card-title">🎧 Розмова 2 — Food</div>
+    <img class="conv-img" src="A2-23-2-Much-Many-Food.jpg" alt="Conversation 2">
+    <audio controls style="display:block;width:100%;margin-bottom:20px">
+      <source src="A2-23-2-Much-Many-Food.mp3">
+      <source src="https://elllo.org/Audio/SoundGrammar/A2-Audio4x/A2-23-2-Much-Many-Food.mp3">
+    </audio>
+    <div id="quiz-container-1"></div>
+    <div class="quiz-result" id="qresult-1" style="display:none"></div>
+  </div>
+</div>
+
+<!-- STEP 4: CONV 3 -->
+<div class="step-panel" id="panel-4">
+  <div class="card">
+    <div class="card-title">🎧 Розмова 3 — Gym</div>
+    <img class="conv-img" src="A2-23-3-Much-Many-Gym.jpg" alt="Conversation 3">
+    <audio controls style="display:block;width:100%;margin-bottom:20px">
+      <source src="A2-23-3-Much-Many-Gym.mp3">
+      <source src="https://elllo.org/Audio/SoundGrammar/A2-Audio4x/A2-23-3-Much-Many-Gym.mp3">
+    </audio>
+    <div id="quiz-container-2"></div>
+    <div class="quiz-result" id="qresult-2" style="display:none"></div>
+  </div>
+</div>
+
+<!-- STEP 5: CONV 4 -->
+<div class="step-panel" id="panel-5">
+  <div class="card">
+    <div class="card-title">🎧 Розмова 4 — Movies</div>
+    <img class="conv-img" src="A2-23-4-Much-Many-Movies.jpg" alt="Conversation 4">
+    <audio controls style="display:block;width:100%;margin-bottom:20px">
+      <source src="A2-23-4-Much-Many-Movies.mp3">
+      <source src="https://elllo.org/Audio/SoundGrammar/A2-Audio4x/A2-23-4-Much-Many-Movies.mp3">
+    </audio>
+    <div id="quiz-container-3"></div>
+    <div class="quiz-result" id="qresult-3" style="display:none"></div>
+  </div>
+</div>
+
+<!-- STEP 6: PUZZLE -->
+<div class="step-panel" id="panel-6">
+  <div class="card">
+    <div class="card-title">🧩 Пазл — Вибери правильне слово</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Обери слово зі списку, щоб заповнити пропуск у розмові.</p>
+    <div id="pzl-container"></div>
+  </div>
+</div>
+
+<!-- STEP 7: ЧИТАННЯ -->
+<div class="step-panel" id="panel-7">
+  <div class="card">
+    <div class="card-title">📖 Читання — Перекладай усно</div>
+    <div id="reading-slides"></div>
+    <div class="car-nav">
+      <button class="car-btn" id="rprev" onclick="carNav('r',-1)" disabled>← Назад</button>
+      <span class="car-counter" id="rcounter">1 / 4</span>
+      <button class="car-btn" id="rnext" onclick="carNav('r',1)">Далі →</button>
+    </div>
+  </div>
+</div>
+
+<!-- STEP 8: КАРТКИ -->
+<div class="step-panel" id="panel-8">
+  <div class="card">
+    <div class="card-title">🃏 Флеш-картки</div>
+    <button class="flip-all-btn" onclick="flipAll()">🔄 Перевернути всі</button>
+    <div class="flip-grid" id="flipGrid"></div>
+  </div>
+</div>
+
+<!-- STEP 9: ГОВОРИМО -->
+<div class="step-panel" id="panel-9">
+  <div class="card">
+    <div class="card-title">🗣️ Говоримо</div>
+    <div id="speaking-slides"></div>
+    <div class="car-nav">
+      <button class="car-btn" id="spprev" onclick="carNav('sp',-1)" disabled>← Назад</button>
+      <span class="car-counter" id="spcounter">1 / 4</span>
+      <button class="car-btn" id="spnext" onclick="carNav('sp',1)">Далі →</button>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<button class="results-fab" onclick="openResults()">📊 Результати <span id="fabScore">0/0</span></button>
+
+<div class="modal-overlay" id="resultsModal">
+  <div class="modal-box">
+    <h2>📊 Результати уроку</h2>
+    <table class="results-table">
+      <thead><tr><th>Вправа</th><th>Результат</th></tr></thead>
+      <tbody id="resultsBody"></tbody>
+    </table>
+    <div class="results-total" id="resultsTotal"></div>
+    <textarea class="results-area" id="resultsText" readonly></textarea>
+    <button class="modal-close" onclick="document.getElementById('resultsModal').classList.remove('open')">Закрити</button>
+  </div>
+</div>
+
+<script>
+const STEPS=[
+  {icon:'🎬',label:'Watch'},
+  {icon:'📚',label:'Слова'},
+  {icon:'🎧',label:'Розмова 1'},
+  {icon:'🎧',label:'Розмова 2'},
+  {icon:'🎧',label:'Розмова 3'},
+  {icon:'🎧',label:'Розмова 4'},
+  {icon:'🧩',label:'Пазл'},
+  {icon:'📖',label:'Читання'},
+  {icon:'🃏',label:'Картки'},
+  {icon:'🗣️',label:'Говоримо'},
+];
+
+const VOCAB=[
+  {en:'for example',            ua:'наприклад'},
+  {en:'a few',                  ua:'декілька'},
+  {en:'great',                  ua:'чудовий / відмінний'},
+  {en:'a little butter',        ua:'трохи масла'},
+  {en:'much equipment',         ua:'багато обладнання'},
+  {en:'lots of weight machines',ua:'багато тренажерів'},
+  {en:'free weights',           ua:'вільні ваги (штанги і гантелі)'},
+  {en:'right now',              ua:'зараз / прямо зараз'},
+  {en:'sweet of you',           ua:'мило з твого боку'},
+  {en:'either',                 ua:'також (у заперечних реченнях)'},
+  {en:'assignments for school', ua:'домашні завдання'},
+];
+
+const CONVS=[
+  {
+    title:'Розмова 1 — Town',
+    img:'A2-23-1-Much-Many-Town.jpg',
+    questions:[
+      {q:'Does the woman think her town is a nice place to live?',
+       opts:['No, she dislikes it','Yes, there are many nice places','It is okay but nothing special','She is not sure'], ans:1},
+      {q:'What does the man like to do at cafes?',
+       opts:['Eat lunch','Meet friends','Study','Work online'], ans:2},
+      {q:'What does the woman say about the cafes in her town?',
+       opts:['There are many and they are great','There are a few but they are not great','There are none','There is only one good one'], ans:1},
+    ]
+  },
+  {
+    title:'Розмова 2 — Food',
+    img:'A2-23-2-Much-Many-Food.jpg',
+    questions:[
+      {q:'Where is the man going?',
+       opts:['To the market','To the supermarket','To the bakery','To the restaurant'], ans:1},
+      {q:'Do they need eggs?',
+       opts:['Yes, a lot','Yes, just a few','No, they have a lot','No, they have some'], ans:2},
+      {q:'What do they have only a little of?',
+       opts:['Milk','Juice','Eggs','Butter'], ans:3},
+    ]
+  },
+  {
+    title:'Розмова 3 — Gym',
+    img:'A2-23-3-Much-Many-Gym.jpg',
+    questions:[
+      {q:"Does the woman's school gym get a good review?",
+       opts:["Yes, it's excellent","Yes, but it is not very good","No gym at all","She doesn't know"], ans:1},
+      {q:"Why is the woman's gym not good?",
+       opts:["It's too small","There isn't much equipment","It's always too busy","It's too expensive"], ans:1},
+      {q:"What does the man's gym have?",
+       opts:['Lots of free weights but not many machines','Lots of weight machines but not many free weights','Only cardio machines','Only free weights'], ans:1},
+    ]
+  },
+  {
+    title:'Розмова 4 — Movies',
+    img:'A2-23-4-Much-Many-Movies.jpg',
+    questions:[
+      {q:'What does the man invite the woman to do on Friday?',
+       opts:['Go to a party','Go to the movies','Go to the gym','Go to a restaurant'], ans:1},
+      {q:"Why can't the woman go?",
+       opts:["She doesn't want to","She has no money and no free time","She is going to another movie","She has to work"], ans:1},
+      {q:'Why does the woman have no free time?',
+       opts:['She has many assignments for school','She has to work a night shift','She has family visiting','She has a trip planned'], ans:0},
+    ]
+  },
+];
+
+const PUZZLES=[
+  {
+    title:'Розмова 1',
+    audio:'A2-23-1-Much-Many-Town.mp3',
+    audioCDN:'https://elllo.org/Audio/SoundGrammar/A2-Audio4x/A2-23-1-Much-Many-Town.mp3',
+    bank:['place','many','town','example','parks','few'],
+    lines:[
+      {t:'text',v:'Man: Is your town a nice '},
+      {t:'gap', v:'place'},
+      {t:'text',v:' to live?'},
+      {t:'br'},
+      {t:'text',v:'Woman: Yes, there are '},
+      {t:'gap', v:'many'},
+      {t:'text',v:' nice places in my '},
+      {t:'gap', v:'town'},
+      {t:'text',v:'.'},
+      {t:'br'},
+      {t:'text',v:'Man: Oh, yeah. What for '},
+      {t:'gap', v:'example'},
+      {t:'text',v:'?'},
+      {t:'br'},
+      {t:'text',v:'Woman: Well, we have many nice '},
+      {t:'gap', v:'parks'},
+      {t:'text',v:' and many nice restaurants.'},
+      {t:'br'},
+      {t:'text',v:'Woman: We have a '},
+      {t:'gap', v:'few'},
+      {t:'text',v:' cafes, but they are not great.'},
+    ]
+  },
+  {
+    title:'Розмова 2',
+    audio:'A2-23-2-Much-Many-Food.mp3',
+    audioCDN:'https://elllo.org/Audio/SoundGrammar/A2-Audio4x/A2-23-2-Much-Many-Food.mp3',
+    bank:['going','need','some','lot','little','more'],
+    lines:[
+      {t:'text',v:'Man: I am '},
+      {t:'gap', v:'going'},
+      {t:'text',v:' to the supermarket. What do we '},
+      {t:'gap', v:'need'},
+      {t:'text',v:'?'},
+      {t:'br'},
+      {t:'text',v:'Woman: We need '},
+      {t:'gap', v:'some'},
+      {t:'text',v:' milk, some bread and some juice.'},
+      {t:'br'},
+      {t:'text',v:'Woman: No, we have a '},
+      {t:'gap', v:'lot'},
+      {t:'text',v:' of eggs.'},
+      {t:'br'},
+      {t:'text',v:'Woman: Yes, we have a '},
+      {t:'gap', v:'little'},
+      {t:'text',v:' butter, but we need '},
+      {t:'gap', v:'more'},
+      {t:'text',v:'.'},
+    ]
+  },
+  {
+    title:'Розмова 3',
+    audio:'A2-23-3-Much-Many-Gym.mp3',
+    audioCDN:'https://elllo.org/Audio/SoundGrammar/A2-Audio4x/A2-23-3-Much-Many-Gym.mp3',
+    bank:['school','not','much','bad','lots','why'],
+    lines:[
+      {t:'text',v:'Man: Is there a gym at your '},
+      {t:'gap', v:'school'},
+      {t:'text',v:'?'},
+      {t:'br'},
+      {t:'text',v:'Woman: Yes, but it is '},
+      {t:'gap', v:'not'},
+      {t:'text',v:' very good.'},
+      {t:'br'},
+      {t:'text',v:'Man: Oh, '},
+      {t:'gap', v:'why'},
+      {t:'text',v:' is that?'},
+      {t:'br'},
+      {t:'text',v:"Woman: Well, there isn't "},
+      {t:'gap', v:'much'},
+      {t:'text',v:' equipment.'},
+      {t:'br'},
+      {t:'text',v:"Man: Oh, that's too "},
+      {t:'gap', v:'bad'},
+      {t:'text',v:'. My school has a nice gym.'},
+      {t:'br'},
+      {t:'text',v:'Man: Yes, it has '},
+      {t:'gap', v:'lots'},
+      {t:'text',v:' of weight machines, but not many free weights.'},
+    ]
+  },
+  {
+    title:'Розмова 4',
+    audio:'A2-23-4-Much-Many-Movies.mp3',
+    audioCDN:'https://elllo.org/Audio/SoundGrammar/A2-Audio4x/A2-23-4-Much-Many-Movies.mp3',
+    bank:['want','can\'t','pay','sweet','free','busy'],
+    lines:[
+      {t:'text',v:'Man: Do you '},
+      {t:'gap', v:'want'},
+      {t:'text',v:' to go to the movies on Friday?'},
+      {t:'br'},
+      {t:'text',v:"Woman: I "},
+      {t:'gap', v:"can't"},
+      {t:'text',v:". I don't have much money right now."},
+      {t:'br'},
+      {t:'text',v:'Man: That is OK. I can '},
+      {t:'gap', v:'pay'},
+      {t:'text',v:' for you.'},
+      {t:'br'},
+      {t:'text',v:"Woman: Oh, that's "},
+      {t:'gap', v:'sweet'},
+      {t:'text',v:" of you to offer. But I don't have much "},
+      {t:'gap', v:'free'},
+      {t:'text',v:' time either.'},
+      {t:'br'},
+      {t:'text',v:'Man: Oh, are you '},
+      {t:'gap', v:'busy'},
+      {t:'text',v:'? Woman: Yes, I have many assignments for school.'},
+    ]
+  },
+];
+
+const TRANSCRIPTS=[
+  {title:'Розмова 1 — Town', lines:[
+    '<strong>Man:</strong> Is your town a nice place to live?',
+    '<strong>Woman:</strong> Yes, there are many nice places in my town.',
+    '<strong>Man:</strong> Oh, yeah. What for example?',
+    '<strong>Woman:</strong> Well, we have many nice parks and many nice restaurants.',
+    '<strong>Man:</strong> What about cafes? I like to study at cafes.',
+    '<strong>Woman:</strong> We have a few cafes, but they are not great.',
+  ]},
+  {title:'Розмова 2 — Food', lines:[
+    '<strong>Man:</strong> I am going to the supermarket. What do we need?',
+    '<strong>Woman:</strong> We need some milk, some bread and some juice.',
+    '<strong>Man:</strong> Do we need any eggs?',
+    '<strong>Woman:</strong> No, we have a lot of eggs.',
+    '<strong>Man:</strong> Do we need any butter?',
+    '<strong>Woman:</strong> Yes, we have a little butter, but we need more.',
+    '<strong>Man:</strong> Do we have any apples?',
+    '<strong>Woman:</strong> We have a few apples, but we need some more, I think.',
+  ]},
+  {title:'Розмова 3 — Gym', lines:[
+    '<strong>Man:</strong> Is there a gym at your school?',
+    '<strong>Woman:</strong> Yes, but it is not very good.',
+    '<strong>Man:</strong> Oh, why is that?',
+    "<strong>Woman:</strong> Well, there isn't much equipment.",
+    "<strong>Man:</strong> Oh, that's too bad. My school has a nice gym.",
+    '<strong>Woman:</strong> Does it have nice equipment?',
+    '<strong>Man:</strong> Yes, it has lots of weight machines, but not many free weights.',
+    '<strong>Woman:</strong> Sounds a lot better than my gym!',
+  ]},
+  {title:'Розмова 4 — Movies', lines:[
+    '<strong>Man:</strong> Do you want to go to the movies on Friday?',
+    "<strong>Woman:</strong> I can't. I don't have much money right now.",
+    '<strong>Man:</strong> That is OK. I can pay for you.',
+    "<strong>Woman:</strong> Oh, that's sweet of you to offer. But I don't have much free time either.",
+    '<strong>Man:</strong> Oh, are you busy?',
+    '<strong>Woman:</strong> Yes, I have many assignments for school.',
+    '<strong>Man:</strong> OK, maybe next time.',
+  ]},
+];
+
+const FLASHCARDS=[
+  {en:'Is your town a nice place to live?',   ua:'Твоє місто — гарне місце для життя?'},
+  {en:'There are many nice parks.',           ua:'Там багато гарних парків.'},
+  {en:'We have a few cafes.',                 ua:'У нас є кілька кафе.'},
+  {en:'I am going to the supermarket.',       ua:'Я йду в супермаркет.'},
+  {en:'We need some milk.',                   ua:'Нам потрібно трохи молока.'},
+  {en:'We have a lot of eggs.',               ua:'У нас багато яєць.'},
+  {en:'We have a little butter.',             ua:'У нас є трохи масла.'},
+  {en:"There isn't much equipment.",          ua:'Немає багато обладнання.'},
+  {en:'It has lots of weight machines.',      ua:'Там багато тренажерів.'},
+  {en:"I don't have much money right now.",   ua:'У мене зараз немає багато грошей.'},
+  {en:"That's sweet of you.",                 ua:'Мило з твого боку.'},
+  {en:'I have many assignments for school.',  ua:'У мене багато домашніх завдань.'},
+];
+
+const SPEAKING=[
+  {
+    title:'Діалог 1 з 4',
+    note:'🤝 Парна розмова — обидва читають свій текст українською',
+    interview:false,
+    lines:[
+      {role:'Студент А', text:'Твоє місто — гарне місце для життя?'},
+      {role:'Студент Б', text:'Так, там є багато гарних місць.'},
+      {role:'Студент А', text:'Наприклад?'},
+      {role:'Студент Б', text:'Є багато гарних парків і ресторанів.'},
+      {role:'Студент А', text:'А кафе є? Я люблю вчитися в кафе.'},
+      {role:'Студент Б', text:'Є кілька кафе, але вони не дуже хороші.'},
+      {role:'Студент А', text:'Шкода. А що ще цікавого є в місті?'},
+      {role:'Студент Б', text:'Є кілька музеїв і великий торговий центр.'},
+    ]
+  },
+  {
+    title:'Діалог 2 з 4',
+    note:'🤝 Парна розмова — обидва читають свій текст українською',
+    interview:false,
+    lines:[
+      {role:'Студент А', text:'Я йду в супермаркет. Що нам потрібно?'},
+      {role:'Студент Б', text:'Нам потрібно молоко, хліб і сік.'},
+      {role:'Студент А', text:'Нам потрібні яйця?'},
+      {role:'Студент Б', text:'Ні, у нас є дуже багато яєць.'},
+      {role:'Студент А', text:'А масло?'},
+      {role:'Студент Б', text:'Так, у нас є трохи, але потрібно більше.'},
+      {role:'Студент А', text:'Яблука є?'},
+      {role:'Студент Б', text:'Є кілька, але думаю, треба купити ще.'},
+    ]
+  },
+  {
+    title:'Діалог 3 з 4',
+    note:'🎤 Студент А перекладає запитання англійською → Студент Б відповідає про себе',
+    interview:true,
+    lines:[
+      {role:'Студент А', text:'Твоє місто — гарне місце для життя?'},
+      {role:'Студент Б', blank:true},
+      {role:'Студент А', text:'Скільки парків є у твоєму місті?'},
+      {role:'Студент Б', blank:true},
+      {role:'Студент А', text:'Ти ходиш у кафе вчитися?'},
+      {role:'Студент Б', blank:true},
+      {role:'Студент А', text:'Скільки ресторанів є поруч з тобою?'},
+      {role:'Студент Б', blank:true},
+      {role:'Студент А', text:'У твоєму місті є багато чи мало магазинів?'},
+      {role:'Студент Б', blank:true},
+      {role:'Студент А', text:'Чого у твоєму місті недостатньо?'},
+      {role:'Студент Б', blank:true},
+      {role:'Студент А', text:'Яке місце ти б порадив(-ла) туристу?'},
+      {role:'Студент Б', blank:true},
+      {role:'Студент А', text:'Ти задоволений(-а) своїм містом?'},
+      {role:'Студент Б', blank:true},
+    ]
+  },
+  {
+    title:'Діалог 4 з 4',
+    note:'🎤 Студент А перекладає запитання англійською → Студент Б відповідає про себе',
+    interview:true,
+    lines:[
+      {role:'Студент А', text:'Скільки вільного часу у тебе зазвичай є?'},
+      {role:'Студент Б', blank:true},
+      {role:'Студент А', text:'Ти часто ходиш у кіно?'},
+      {role:'Студент Б', blank:true},
+      {role:'Студент А', text:'Скільки домашніх завдань ти маєш щотижня?'},
+      {role:'Студент Б', blank:true},
+      {role:'Студент А', text:'Ти зайнятий(-а) у вихідні?'},
+      {role:'Студент Б', blank:true},
+      {role:'Студент А', text:'Скільки часу ти витрачаєш на навчання щодня?'},
+      {role:'Студент Б', blank:true},
+      {role:'Студент А', text:'У тебе є гроші, щоб піти в кіно цього тижня?'},
+      {role:'Студент Б', blank:true},
+      {role:'Студент А', text:'Що ти любиш робити, коли маєш вільний час?'},
+      {role:'Студент Б', blank:true},
+      {role:'Студент А', text:'Ти можеш сходити в кіно наступної п\'ятниці?'},
+      {role:'Студент Б', blank:true},
+    ]
+  },
+];
+
+// ============================================================
+// SCORING
+// ============================================================
+const correctMap={},quizAnswered={},quizScores={},puzzleScores={};
+
+// ============================================================
+// STEPPER
+// ============================================================
+(function(){
+  const st=document.getElementById('stepper');
+  STEPS.forEach((s,i)=>{
+    const b=document.createElement('button');
+    b.className='step-btn';b.id='sbtn-'+i;
+    b.innerHTML='<span class="sicon">'+s.icon+'</span><span>'+s.label+'</span>';
+    b.onclick=()=>goStep(i);
+    st.appendChild(b);
+  });
+})();
+
+function goStep(i){
+  document.querySelectorAll('.step-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.step-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+i).classList.add('active');
+  document.getElementById('sbtn-'+i).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function markDone(i){const b=document.getElementById('sbtn-'+i);if(b)b.classList.add('done');}
+
+// ============================================================
+// VOCAB
+// ============================================================
+(function(){
+  const g=document.getElementById('vocabGrid');
+  let h='';
+  VOCAB.forEach(v=>{
+    const e=v.en.replace(/'/g,"\\'");
+    h+='<div class="vocab-item">'+
+       '<div class="vocab-word">'+v.en+'<div class="vocab-ua">'+v.ua+'</div></div>'+
+       '<button class="speak-btn" onclick="speak(\''+e+'\')">🔊</button>'+
+       '</div>';
+  });
+  g.innerHTML=h;
+})();
+function speak(t){const u=new SpeechSynthesisUtterance(t);u.lang='en-US';u.rate=0.85;speechSynthesis.speak(u);}
+
+// ============================================================
+// QUIZ
+// ============================================================
+(function(){
+  CONVS.forEach((c,ci)=>{
+    const cont=document.getElementById('quiz-container-'+ci);
+    let h='';
+    c.questions.forEach((q,qi)=>{
+      const qKey='q'+(ci+1);
+      h+='<div class="quiz-q"><p>'+(qi+1)+'. '+q.q+'</p><div class="quiz-opts">';
+      q.opts.forEach((o,oi)=>{
+        h+='<button class="quiz-opt" onclick="answerQuiz(\''+qKey+'\','+qi+','+oi+','+q.ans+','+ci+',this)">'+o+'</button>';
+      });
+      h+='</div></div>';
+    });
+    cont.innerHTML=h;
+  });
+})();
+
+function answerQuiz(qKey,qi,oi,ans,ci,btn){
+  const ck=qKey+'-'+qi;
+  if(quizAnswered[ck])return;
+  quizAnswered[ck]=true;correctMap[ck]=(oi===ans);
+  const allOpts=btn.parentElement.querySelectorAll('.quiz-opt');
+  allOpts.forEach(b=>b.disabled=true);
+  if(oi===ans){btn.classList.add('correct');}
+  else{btn.classList.add('wrong');allOpts[ans].classList.add('correct');}
+  const total=CONVS[ci].questions.length;
+  const allDone=Array.from({length:total},(_,k)=>!!quizAnswered[qKey+'-'+k]).every(Boolean);
+  if(allDone){
+    let got=0;
+    for(let k=0;k<total;k++)if(correctMap[qKey+'-'+k])got++;
+    quizScores[qKey]={got,total};
+    updateFab();markDone(ci+2);
+    const res=document.getElementById('qresult-'+ci);
+    res.style.display='block';
+    res.className='quiz-result '+(got===total?'pass':'fail');
+    res.innerHTML=(got===total?'🏆':'💪')+' Результат: '+got+'/'+total;
+  }
+}
+
+// ============================================================
+// PUZZLE
+// ============================================================
+function makeSel(ans,pi,bank){
+  const sh=[...bank].sort(()=>Math.random()-.5);
+  let o='<option value="">—</option>';
+  sh.forEach(w=>{o+='<option value="'+w+'">'+w+'</option>';});
+  return '<select class="pzl-sel" data-ans="'+ans+'" data-pi="'+pi+'">'+o+'</select>';
+}
+
+(function(){
+  const cont=document.getElementById('pzl-container');
+  let html='';
+  PUZZLES.forEach((pz,pi)=>{
+    const pKey='p'+(pi+1);
+    let lh='<div class="pzl-line">';
+    pz.lines.forEach(tok=>{
+      if(tok.t==='text')lh+='<span class="pzl-word">'+tok.v+'</span>';
+      else if(tok.t==='gap')lh+=makeSel(tok.v,pi,pz.bank);
+      else if(tok.t==='br')lh+='</div><div class="pzl-line">';
+    });
+    lh+='</div>';
+    html+='<div class="card" id="pzl-card-'+pi+'">'+
+      '<div style="font-weight:800;font-size:15px;margin-bottom:14px">'+pz.title+'</div>'+
+      lh+
+      '<div class="pzl-audio-label">💡 Якщо треба — прослухай аудіо ще раз — '+pz.title+'</div>'+
+      '<div id="pzl-aud-'+pi+'"></div>'+
+      '<button class="check-btn" onclick="checkPuzzle('+pi+',\''+pKey+'\')">Перевірити</button>'+
+      '<div class="pzl-score" id="pzl-score-'+pi+'"></div>'+
+      '</div>';
+  });
+  cont.innerHTML=html;
+  PUZZLES.forEach((pz,pi)=>{
+    const wrap=document.getElementById('pzl-aud-'+pi);
+    const aud=document.createElement('audio');aud.controls=true;
+    aud.style.cssText='display:block;width:100%;margin-bottom:12px';
+    const s1=document.createElement('source');s1.src=pz.audio;
+    const s2=document.createElement('source');s2.src=pz.audioCDN;
+    aud.appendChild(s1);aud.appendChild(s2);wrap.appendChild(aud);
+  });
+})();
+
+function checkPuzzle(pi,pKey){
+  const card=document.getElementById('pzl-card-'+pi);
+  const sels=card.querySelectorAll('.pzl-sel');
+  let got=0,total=sels.length;
+  sels.forEach(sel=>{
+    if(sel.value===sel.dataset.ans){sel.className='pzl-sel ok';got++;}
+    else{sel.className='pzl-sel err';}
+  });
+  puzzleScores[pKey]={got,total};updateFab();
+  const sc=document.getElementById('pzl-score-'+pi);
+  sc.innerHTML='<span style="color:'+(got===total?'var(--green)':'var(--red)')+'">'+
+    (got===total?'🏆':'💪')+' '+got+'/'+total+'</span>';
+  if(got===total)markDone(6);
+}
+
+// ============================================================
+// READING
+// ============================================================
+(function(){
+  const cont=document.getElementById('reading-slides');
+  TRANSCRIPTS.forEach((tr,i)=>{
+    const d=document.createElement('div');
+    d.className='slide'+(i===0?' active':'');d.id='rslide'+i;
+    let h='<div class="section-label">'+tr.title+'</div><div class="transcript">';
+    tr.lines.forEach(l=>{h+='<p>'+l+'</p>';});
+    h+='</div>';d.innerHTML=h;cont.appendChild(d);
+  });
+})();
+
+// ============================================================
+// FLASHCARDS
+// ============================================================
+(function(){
+  const g=document.getElementById('flipGrid');
+  let h='';
+  FLASHCARDS.forEach((c,i)=>{
+    h+='<div class="flip-card" id="fc'+i+'" onclick="flipCard('+i+')">'+
+       '<div class="flip-inner">'+
+       '<div class="flip-front"><div class="fe">'+c.en+'</div><div class="fhint">🇬🇧 Перекладай українською</div></div>'+
+       '<div class="flip-back"><div class="fu">'+c.ua+'</div></div>'+
+       '</div></div>';
+  });
+  g.innerHTML=h;
+})();
+function flipCard(i){document.getElementById('fc'+i).classList.toggle('flipped');}
+function flipAll(){
+  const cards=document.querySelectorAll('.flip-card');
+  const any=document.querySelector('.flip-card.flipped');
+  cards.forEach(c=>{any?c.classList.remove('flipped'):c.classList.add('flipped');});
+}
+
+// ============================================================
+// SPEAKING
+// ============================================================
+(function(){
+  const cont=document.getElementById('speaking-slides');
+  SPEAKING.forEach((sp,i)=>{
+    const d=document.createElement('div');
+    d.className='slide'+(i===0?' active':'');d.id='spslide'+i;
+    let h='<div class="section-label" style="margin-bottom:10px">'+sp.title+'</div>';
+    if(sp.note)h+='<div class="sp-interview-note">'+sp.note+'</div>';
+    sp.lines.forEach(ln=>{
+      h+='<div class="sp-card"><div class="sp-role">'+ln.role+'</div><div class="sp-text">';
+      h+=ln.blank?'<span class="sp-blank">відповідає про себе англійською...</span>':ln.text;
+      h+='</div></div>';
+    });
+    d.innerHTML=h;cont.appendChild(d);
+  });
+})();
+
+// ============================================================
+// CAROUSEL
+// ============================================================
+const carState={r:0,sp:0};
+function carNav(id,dir){
+  carState[id]=Math.max(0,Math.min(3,carState[id]+dir));
+  const idx=carState[id];
+  const prefix=id==='r'?'rslide':'spslide';
+  document.querySelectorAll('[id^="'+prefix+'"]').forEach((s,i)=>s.classList.toggle('active',i===idx));
+  document.getElementById(id+'prev').disabled=idx===0;
+  document.getElementById(id+'next').disabled=idx===3;
+  document.getElementById(id+'counter').textContent=(idx+1)+' / 4';
+  if(id==='r'&&idx===3)markDone(7);
+  if(id==='sp'&&idx===3)markDone(9);
+}
+
+// ============================================================
+// RESULTS
+// ============================================================
+function updateFab(){
+  let g=0,t=0;
+  Object.values(quizScores).forEach(s=>{if(s){g+=s.got;t+=s.total;}});
+  Object.values(puzzleScores).forEach(s=>{if(s){g+=s.got;t+=s.total;}});
+  document.getElementById('fabScore').textContent=g+'/'+t;
+}
+
+function openResults(){
+  let rows='',g=0,t=0;
+  for(let i=1;i<=4;i++){
+    const s=quizScores['q'+i];
+    const v=s?s.got+'/'+s.total:'—';
+    if(s){g+=s.got;t+=s.total;}
+    rows+='<tr><td>Quiz '+i+'</td><td>'+v+'</td></tr>';
+  }
+  for(let i=1;i<=4;i++){
+    const s=puzzleScores['p'+i];
+    const v=s?s.got+'/'+s.total:'—';
+    if(s){g+=s.got;t+=s.total;}
+    rows+='<tr><td>Puzzle '+i+'</td><td>'+v+'</td></tr>';
+  }
+  document.getElementById('resultsBody').innerHTML=rows;
+  const pct=t>0?Math.round(g/t*100):0;
+  const medal=pct>=90?'🏆':pct>=70?'🌟':pct>=50?'👍':'💪';
+  document.getElementById('resultsTotal').textContent=medal+' '+g+'/'+t+' — '+pct+'%';
+  let txt='A2-23 Much / Many\n'+'─'.repeat(28)+'\n';
+  for(let i=1;i<=4;i++){const s=quizScores['q'+i];txt+='Quiz '+i+': '+(s?s.got+'/'+s.total:'—')+'\n';}
+  for(let i=1;i<=4;i++){const s=puzzleScores['p'+i];txt+='Puzzle '+i+': '+(s?s.got+'/'+s.total:'—')+'\n';}
+  txt+='─'.repeat(28)+'\nЗагалом: '+g+'/'+t+' ('+pct+'%) '+medal;
+  document.getElementById('resultsText').value=txt;
+  document.getElementById('resultsModal').classList.add('open');
+}
+
+goStep(0);
+</script>
+</body>
+</html>
